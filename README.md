@@ -1,39 +1,47 @@
 # Video Transcriber
 
-Turn a YouTube video into a clean text transcript and a ready-to-paste prompt for any AI assistant (Gemini, ChatGPT, NotebookLM, Claude, etc.) — so you can go from a recording to an outline, summary, and key takeaways in minutes. Sermon-friendly out of the box; works for any spoken-word video.
+Turn a YouTube video into a clean text transcript and a ready-to-paste prompt for any AI assistant (Gemini, ChatGPT, NotebookLM, Claude, etc.) — so you can go from a recording to an outline, summary, and key takeaways in minutes. Curated prompt templates for sermons, security talks, IT/SRE talks, and other structured spoken content.
 
 ---
 
-## ⚡ Fast Track (Mac, ~10 minutes)
+## Privacy & cost
 
-If you already have Homebrew installed, paste these four blocks into Terminal one at a time:
+Everything runs on your Mac after install. `yt-dlp` is the only network call (downloading from YouTube); `whisper.cpp` does the transcription on-device, and the prompt is copied to your local clipboard. **No API keys, no telemetry, no per-minute fees.** The AI step (paste into Gemini, ChatGPT, NotebookLM, or Claude) uses whichever assistant you already have.
+
+---
+
+## ⚡ Quickstart (Mac, Homebrew already installed)
 
 ```bash
-# 1. Install the three tools
 brew install whisper-cpp ffmpeg yt-dlp
+```
 
-# 2. Get this repo
+```bash
 git clone https://github.com/TheDeLay/video-transcriber.git
 cd video-transcriber
 chmod +x bash/transcribe.sh
+```
 
-# 3. Run it (replace the URL with your video)
+```bash
 ./bash/transcribe.sh "https://www.youtube.com/watch?v=YOUR_VIDEO_ID"
 ```
 
-When it finishes, you'll find on your Desktop:
+When it finishes, your Desktop has `<title>_<date>.txt` (transcript) and `<title>_<date>_prompt.md` (AI prompt — also auto-copied to your clipboard).
 
-- `<video-title>_<date>.txt` — the transcript
-- `<video-title>_<date>_prompt.md` — a ready-to-paste AI prompt
-- The prompt is also **already on your clipboard** — open Gemini/ChatGPT/NotebookLM and press `⌘ + V`.
+**Don't have Homebrew?** Install it from [brew.sh](https://brew.sh), then run the steps above.
+**Want every step explained?** See [`bash/install.md`](bash/install.md) — full walkthrough, troubleshooting, customization.
 
-**Don't have a specific URL?** Use `--latest` to grab the newest upload from a channel:
+### `--latest` for regular content
+
+For series content (weekly podcasts, Sunday services, daily uploads, etc.), skip URL lookup:
 
 ```bash
-./bash/transcribe.sh --latest --filter "Contemporary" "https://www.youtube.com/@WheatonBible/streams"
-```
+# Most recent upload from a channel
+./bash/transcribe.sh --latest "https://www.youtube.com/@SomeChannel/streams"
 
-**Don't have Homebrew yet?** See the full walkthrough → **[bash/install.md](bash/install.md)**.
+# Most recent upload whose title contains a keyword (case-insensitive, scans 30 most recent)
+./bash/transcribe.sh --latest --filter "KEYWORD" "https://www.youtube.com/@SomeChannel/streams"
+```
 
 ---
 
@@ -61,6 +69,8 @@ YouTube URL  →  yt-dlp  →  audio.wav  →  Whisper  →  transcript.txt
                                                       ↓
                                        Outline + Summary + Takeaways
 ```
+
+`yt-dlp` is the only network step; everything after the audio download runs locally.
 
 ## Customizing the AI prompt
 
