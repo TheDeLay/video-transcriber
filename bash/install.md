@@ -141,7 +141,7 @@ chmod +x bash/transcribe.sh
 
 Replace the URL with the actual YouTube link. **Quotes are important.**
 
-You'll see progress messages. When it finishes (typically 1–3× the length of the video, depending on model and Mac), you'll find two files on your Desktop:
+You'll see progress messages. On an Apple Silicon Mac (M1/M2/M3/M4) with the default `small.en` model, transcription takes roughly **6% of the video length** — a 90-minute sermon transcribes in about 5–6 minutes; a 30-minute video in under 2. Add 1–2 minutes for downloading the audio. When it finishes, you'll find two files on your Desktop:
 
 - `<Video-Title>_<date>.txt` — the transcript
 - `<Video-Title>_<date>_prompt.md` — the AI prompt with the transcript built in
@@ -158,7 +158,7 @@ The prompt is also **automatically copied to your clipboard**. Open Gemini, Chat
 
 **The script ran but the transcript looks garbled or empty** — The video may have very poor audio, music-only sections, or be in a language other than English. Try `WHISPER_MODEL=medium.en ./bash/transcribe.sh ...` for higher accuracy.
 
-**Transcription is taking forever** — The first run downloads the model (~500 MB), which is one-time. After that, transcription on an M3/M4 Mac should run roughly as fast as the video plays (a 30-min video = ~30 min, or faster).
+**Transcription is taking forever** — The first run downloads the model (~500 MB), which is one-time. After that, transcription on an Apple Silicon Mac (M1/M2/M3/M4) with the default `small.en` model is fast: roughly 5–6 minutes for a 90-minute sermon, or about 6% of the video length. If you're seeing 30+ minutes for a 30-minute video, check that whisper.cpp is actually using the Metal backend (it should be by default on Apple Silicon — look for `Metal` in the startup output).
 
 **Need help?** Send a screenshot of the Terminal window with the error message visible.
 
