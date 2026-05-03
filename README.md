@@ -62,11 +62,35 @@ YouTube URL  →  yt-dlp  →  audio.wav  →  Whisper  →  transcript.txt
 
 ## Customizing the AI prompt
 
-`prompt-template.md` is plain text. Edit it to fit your use case:
+`prompt-template.md` (at the project root) is the default prompt. It produces an outline, an insightful summary, and 5–7 takeaways for any structured talk — sermons, lectures, conference talks, podcasts, interviews. It also runs a transcription-hygiene pass first so the AI flags speech-to-text errors instead of building conclusions on top of them.
 
-- The default is tuned for **sermons and other structured spoken content** (asks for an outline, summary, and 5–7 takeaways).
-- For lectures, podcasts, or interviews, soften the religious framing in the opening line.
-- For meeting notes, replace the takeaways section with "Action items" and "Decisions made."
+You can swap in a different template three ways:
+
+```bash
+# Bash path — flag (highest precedence)
+./bash/transcribe.sh --template templates/church-leader.md "URL"
+
+# Bash path — env var
+PROMPT_TEMPLATE=templates/church-leader.md ./bash/transcribe.sh "URL"
+
+# Python path
+video-transcribe --template templates/church-leader.md "URL"
+```
+
+Or set it as your shell default:
+
+```bash
+# Add to ~/.zshrc or ~/.bashrc
+export PROMPT_TEMPLATE="$HOME/path/to/video-transcriber/templates/church-leader.md"
+```
+
+### Curated alternatives
+
+| Template | For |
+|---|---|
+| [`templates/church-leader.md`](templates/church-leader.md) | Sermons / spiritual talks where the user is a pastor or ministry leader. Adds leader self-application, congregation reception anticipation, and pastoral action postures. |
+
+See [`templates/README.md`](templates/README.md) for the convention if you want to write your own and contribute it back.
 
 ## License
 

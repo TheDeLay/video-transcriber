@@ -37,6 +37,7 @@ Usage:
   $0 <youtube-url>
   $0 --latest <channel-url>
   $0 --latest --filter "<keyword>" <channel-url>
+  $0 --template <path> <youtube-url>
 
 Examples:
   # Transcribe a specific video
@@ -48,11 +49,23 @@ Examples:
   # Transcribe the most recent upload whose title matches a keyword
   $0 --latest --filter "Contemporary" "https://www.youtube.com/@WheatonBible/streams"
 
+  # Use a non-default prompt template
+  $0 --template templates/church-leader.md "https://www.youtube.com/watch?v=..."
+
 Flags:
-  --latest         Treat the URL as a channel/playlist and transcribe its newest entry.
-  --filter <kw>    With --latest: pick the newest entry whose title contains <kw>
-                   (case-insensitive). Searches up to 30 most recent entries.
-  -h, --help       Show this message.
+  --latest          Treat the URL as a channel/playlist and transcribe its newest entry.
+  --filter <kw>     With --latest: pick the newest entry whose title contains <kw>
+                    (case-insensitive). Searches up to 30 most recent entries.
+  --template <path> Use a non-default prompt template file. See templates/ for
+                    curated alternatives. Wins over the PROMPT_TEMPLATE env var.
+  -h, --help        Show this message.
+
+Environment variables:
+  PROMPT_TEMPLATE   Path to a non-default prompt template. Overridden by --template.
+                    Default: prompt-template.md at the project root.
+  WHISPER_MODEL     Whisper model name (default: small.en).
+  WHISPER_MODEL_DIR Where models are stored (default: ~/.whisper-models).
+  OUTPUT_DIR        Where transcripts and prompts are written (default: ~/Desktop).
 EOF
 }
 
@@ -60,6 +73,7 @@ EOF
 
 LATEST=""
 FILTER=""
+TEMPLATE_OVERRIDE=""
 URL=""
 
 while [[ $# -gt 0 ]]; do
@@ -71,6 +85,11 @@ while [[ $# -gt 0 ]]; do
     --filter)
       [[ -n "${2:-}" ]] || die "--filter needs a keyword argument."
       FILTER="$2"
+      shift 2
+      ;;
+    --template)
+      [[ -n "${2:-}" ]] || die "--template needs a path argument."
+      TEMPLATE_OVERRIDE="$2"
       shift 2
       ;;
     -h|--help)
@@ -146,7 +165,15 @@ MODEL_DIR="${WHISPER_MODEL_DIR:-$HOME/.whisper-models}"
 MODEL_FILE="$MODEL_DIR/ggml-${MODEL}.bin"
 OUTPUT_DIR="${OUTPUT_DIR:-$HOME/Desktop}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATE="$SCRIPT_DIR/../prompt-template.md"
+
+# Template precedence: --template flag > PROMPT_TEMPLATE env var > default
+if [[ -n "$TEMPLATE_OVERRIDE" ]]; then
+  TEMPLATE="$TEMPLATE_OVERRIDE"
+elif [[ -n "${PROMPT_TEMPLATE:-}" ]]; then
+  TEMPLATE="$PROMPT_TEMPLATE"
+else
+  TEMPLATE="$SCRIPT_DIR/../prompt-template.md"
+fi
 
 # ---------- preflight ----------------------------------------------------------
 
@@ -163,7 +190,7 @@ else
   die "whisper.cpp is not installed. Run: brew install whisper-cpp"
 fi
 
-[[ -f "$TEMPLATE" ]] || die "prompt-template.md not found at $TEMPLATE"
+[[ -f "$TEMPLATE" ]] || die "Prompt template not found at $TEMPLATE"
 mkdir -p "$OUTPUT_DIR"
 
 # ---------- model download (one-time) ------------------------------------------
