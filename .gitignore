@@ -1,5 +1,7 @@
 # Internal planning, not for the public repo
 SUMMARY.md
+HANDOFF-FOR-COWORK.md
+HANDOFF-*.md
 
 # Outputs from running the tool
 *.txt
