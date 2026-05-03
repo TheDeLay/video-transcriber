@@ -16,19 +16,19 @@ Drop-in replacements for `prompt-template.md` (one directory up). Use these when
 
 ```bash
 # One-off override via flag
-./bash/transcribe.sh --template templates/church-leader.md "URL"
+./bash/transcribe.sh --template templates/infosec-leader.md "URL"
 
 # One-off override via env var
-PROMPT_TEMPLATE=templates/church-leader.md ./bash/transcribe.sh "URL"
+PROMPT_TEMPLATE=templates/infosec-leader.md ./bash/transcribe.sh "URL"
 
 # Default for your shell — add to ~/.zshrc or ~/.bashrc
-export PROMPT_TEMPLATE="$HOME/path/to/video-transcriber/templates/church-leader.md"
+export PROMPT_TEMPLATE="$HOME/path/to/video-transcriber/templates/infosec-leader.md"
 ```
 
 ### Python path
 
 ```bash
-video-transcribe --template templates/church-leader.md "URL"
+video-transcribe --template templates/infosec-leader.md "URL"
 ```
 
 Both paths produce identical outputs. The `--template` flag wins over the `PROMPT_TEMPLATE` env var, which wins over the default.

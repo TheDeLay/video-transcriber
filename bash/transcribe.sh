@@ -50,7 +50,7 @@ Examples:
   $0 --latest --filter "Contemporary" "https://www.youtube.com/@WheatonBible/streams"
 
   # Use a non-default prompt template
-  $0 --template templates/church-leader.md "https://www.youtube.com/watch?v=..."
+  $0 --template templates/infosec-leader.md "https://www.youtube.com/watch?v=..."
 
 Flags:
   --latest          Treat the URL as a channel/playlist and transcribe its newest entry.

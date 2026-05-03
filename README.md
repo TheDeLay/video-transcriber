@@ -70,20 +70,20 @@ You can swap in a different template three ways:
 
 ```bash
 # Bash path — flag (highest precedence)
-./bash/transcribe.sh --template templates/church-leader.md "URL"
+./bash/transcribe.sh --template templates/infosec-leader.md "URL"
 
 # Bash path — env var
-PROMPT_TEMPLATE=templates/church-leader.md ./bash/transcribe.sh "URL"
+PROMPT_TEMPLATE=templates/infosec-leader.md ./bash/transcribe.sh "URL"
 
 # Python path
-video-transcribe --template templates/church-leader.md "URL"
+video-transcribe --template templates/infosec-leader.md "URL"
 ```
 
 Or set it as your shell default:
 
 ```bash
 # Add to ~/.zshrc or ~/.bashrc
-export PROMPT_TEMPLATE="$HOME/path/to/video-transcriber/templates/church-leader.md"
+export PROMPT_TEMPLATE="$HOME/path/to/video-transcriber/templates/infosec-leader.md"
 ```
 
 ### Curated alternatives
