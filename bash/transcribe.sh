@@ -114,18 +114,23 @@ if [[ -n "$LATEST" ]]; then
 
   if [[ -n "$FILTER" ]]; then
     echo "    Filter:  '$FILTER' (case-insensitive)"
+    # `|| true` keeps `set -e + pipefail` from swallowing our die message
+    # when grep finds no matches (grep exits 1 → pipefail → script aborts
+    # before the [[ -n "$RESOLVED_ID" ]] check can run).
     RESOLVED_ID="$(
       yt-dlp --no-warnings --flat-playlist --playlist-end 30 \
         --print "%(id)s|%(title)s" "$URL" 2>/dev/null \
         | grep -i -- "$FILTER" \
         | head -1 \
-        | cut -d'|' -f1
+        | cut -d'|' -f1 \
+        || true
     )"
     [[ -n "$RESOLVED_ID" ]] || die "No upload in the 30 most recent entries matched '$FILTER'."
   else
     RESOLVED_ID="$(
       yt-dlp --no-warnings --flat-playlist --playlist-end 1 \
-        --print "%(id)s" "$URL" 2>/dev/null
+        --print "%(id)s" "$URL" 2>/dev/null \
+        || true
     )"
     [[ -n "$RESOLVED_ID" ]] || die "Could not list any uploads from that channel URL."
   fi
