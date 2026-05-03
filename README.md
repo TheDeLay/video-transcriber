@@ -46,6 +46,8 @@ When it finishes, you'll find on your Desktop:
 
 Both paths produce identical outputs.
 
+> **Platform support:** macOS is the primary tested platform. Linux is expected to work for both paths but isn't validated in this release. Windows isn't supported yet — the bash path won't work natively, and the Python path likely works under WSL but is unverified. See [`CHANGELOG.md`](CHANGELOG.md) for what's tested per release.
+
 ## How it works
 
 ```
@@ -88,9 +90,11 @@ export PROMPT_TEMPLATE="$HOME/path/to/video-transcriber/templates/church-leader.
 
 | Template | For |
 |---|---|
-| [`templates/church-leader.md`](templates/church-leader.md) | Sermons / spiritual talks where the user is a pastor or ministry leader. Adds leader self-application, congregation reception anticipation, and pastoral action postures. |
+| [`templates/church-leader.md`](templates/church-leader.md) | Sermons / spiritual talks where the user is a pastor or ministry leader. |
+| [`templates/infosec-leader.md`](templates/infosec-leader.md) | Security conference talks, vendor briefings, threat intel, post-mortems. |
+| [`templates/it-leader.md`](templates/it-leader.md) | SRE / DevOps / platform talks, vendor roadmaps, ITSM training, architecture reviews. |
 
-See [`templates/README.md`](templates/README.md) for the convention if you want to write your own and contribute it back.
+See [`templates/README.md`](templates/README.md) for what each one adds and the convention if you want to write your own and contribute it back.
 
 ## License
 

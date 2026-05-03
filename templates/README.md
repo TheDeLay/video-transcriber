@@ -7,6 +7,8 @@ Drop-in replacements for `prompt-template.md` (one directory up). Use these when
 | File | For |
 |---|---|
 | [`church-leader.md`](church-leader.md) | Sermons / spiritual talks where the user is a pastor, ministry leader, teacher, or seminary student. Adds: leader self-application, congregation reception anticipation, and pastoral action postures (challenge / help / encourage). |
+| [`infosec-leader.md`](infosec-leader.md) | Security conference talks, vendor briefings, threat-intel walkthroughs, post-mortems. Adds: speaker's threat model, surfaced + implied risks, controls in three tiers (quick wins / medium / strategic), homelab application, vendor-pitch filter, exec translation. |
+| [`it-leader.md`](it-leader.md) | SRE / DevOps / platform conference talks, vendor roadmaps, ITSM training, internal architecture reviews. Adds: speaker's frame check, stability and failure-mode analysis, user adoption risk, sustainability across 6m/12m/3y horizons, rollout/rollback plan, exec translation. |
 
 ## How to use
 
