@@ -1,0 +1,25 @@
+# Internal planning, not for the public repo
+SUMMARY.md
+
+# Outputs from running the tool
+*.txt
+*.srt
+*.vtt
+*.tsv
+*.json
+*.wav
+*.m4a
+*.mp4
+*_prompt.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+
+# Mac
+.DS_Store
