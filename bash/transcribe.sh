@@ -5,6 +5,8 @@
 #
 # Usage:
 #   ./transcribe.sh "https://www.youtube.com/watch?v=..."
+#   ./transcribe.sh --latest "https://www.youtube.com/@CHANNEL/streams"
+#   ./transcribe.sh --latest --filter "Contemporary" "https://www.youtube.com/@CHANNEL/streams"
 #
 # Optional environment variables:
 #   WHISPER_MODEL       Model name without prefix (default: small.en)
@@ -29,18 +31,107 @@ require_cmd() {
   command -v "$1" >/dev/null 2>&1 || die "'$1' is not installed. See bash/install.md."
 }
 
-# ---------- args ---------------------------------------------------------------
-
-URL="${1:-}"
-if [[ -z "$URL" ]]; then
+show_usage() {
   cat <<EOF
-Usage: $0 <youtube-url>
+Usage:
+  $0 <youtube-url>
+  $0 --latest <channel-url>
+  $0 --latest --filter "<keyword>" <channel-url>
 
-Example:
+Examples:
+  # Transcribe a specific video
   $0 "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
+  # Transcribe the most recent upload from a channel
+  $0 --latest "https://www.youtube.com/@SomeChannel/streams"
+
+  # Transcribe the most recent upload whose title matches a keyword
+  $0 --latest --filter "Contemporary" "https://www.youtube.com/@WheatonBible/streams"
+
+Flags:
+  --latest         Treat the URL as a channel/playlist and transcribe its newest entry.
+  --filter <kw>    With --latest: pick the newest entry whose title contains <kw>
+                   (case-insensitive). Searches up to 30 most recent entries.
+  -h, --help       Show this message.
 EOF
+}
+
+# ---------- args ---------------------------------------------------------------
+
+LATEST=""
+FILTER=""
+URL=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --latest)
+      LATEST="1"
+      shift
+      ;;
+    --filter)
+      [[ -n "${2:-}" ]] || die "--filter needs a keyword argument."
+      FILTER="$2"
+      shift 2
+      ;;
+    -h|--help)
+      show_usage
+      exit 0
+      ;;
+    --)
+      shift
+      URL="${1:-}"
+      break
+      ;;
+    -*)
+      die "Unknown flag: $1 (try --help)"
+      ;;
+    *)
+      if [[ -z "$URL" ]]; then
+        URL="$1"
+      else
+        die "Unexpected extra argument: $1 (try --help)"
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$URL" ]]; then
+  show_usage
   exit 1
+fi
+
+if [[ -z "$LATEST" && -n "$FILTER" ]]; then
+  die "--filter only makes sense with --latest."
+fi
+
+# ---------- resolve --latest to a video URL -----------------------------------
+
+if [[ -n "$LATEST" ]]; then
+  require_cmd yt-dlp
+  color_blue "==> Looking up most recent upload from channel..."
+  echo "    Channel: $URL"
+
+  if [[ -n "$FILTER" ]]; then
+    echo "    Filter:  '$FILTER' (case-insensitive)"
+    RESOLVED_ID="$(
+      yt-dlp --no-warnings --flat-playlist --playlist-end 30 \
+        --print "%(id)s|%(title)s" "$URL" 2>/dev/null \
+        | grep -i -- "$FILTER" \
+        | head -1 \
+        | cut -d'|' -f1
+    )"
+    [[ -n "$RESOLVED_ID" ]] || die "No upload in the 30 most recent entries matched '$FILTER'."
+  else
+    RESOLVED_ID="$(
+      yt-dlp --no-warnings --flat-playlist --playlist-end 1 \
+        --print "%(id)s" "$URL" 2>/dev/null
+    )"
+    [[ -n "$RESOLVED_ID" ]] || die "Could not list any uploads from that channel URL."
+  fi
+
+  URL="https://www.youtube.com/watch?v=${RESOLVED_ID}"
+  color_green "    Resolved: $URL"
 fi
 
 # ---------- config -------------------------------------------------------------

@@ -150,6 +150,24 @@ The prompt is also **automatically copied to your clipboard**. Open Gemini, Chat
 
 ---
 
+## Don't have a specific URL? Use `--latest`
+
+If you just want "the most recent upload from this channel," skip looking up the URL and let the script find it for you:
+
+```bash
+# Most recent upload from a channel (use the /streams tab for live-streamed services)
+./bash/transcribe.sh --latest "https://www.youtube.com/@SomeChannel/streams"
+
+# Most recent upload whose title contains a keyword (case-insensitive)
+./bash/transcribe.sh --latest --filter "Contemporary" "https://www.youtube.com/@WheatonBible/streams"
+```
+
+Useful when you transcribe a regular series — Sunday services, weekly podcasts, daily devotionals. The script searches the 30 most recent uploads and picks the first match.
+
+> **Tip — finding the right channel URL:** Visit the channel on YouTube, click the `Live` or `Streams` tab if the recordings are live-streamed services, then copy the URL from your browser's address bar. The URL ending in `/streams`, `/videos`, or `/playlists` is what `--latest` wants.
+
+---
+
 ## Troubleshooting
 
 **`brew: command not found`** — You missed Step 2's "Next steps" lines. Re-run the Homebrew installer or paste the `eval ...` line that the installer printed.

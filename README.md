@@ -27,6 +27,12 @@ When it finishes, you'll find on your Desktop:
 - `<video-title>_<date>_prompt.md` — a ready-to-paste AI prompt
 - The prompt is also **already on your clipboard** — open Gemini/ChatGPT/NotebookLM and press `⌘ + V`.
 
+**Don't have a specific URL?** Use `--latest` to grab the newest upload from a channel:
+
+```bash
+./bash/transcribe.sh --latest --filter "Contemporary" "https://www.youtube.com/@WheatonBible/streams"
+```
+
 **Don't have Homebrew yet?** See the full walkthrough → **[bash/install.md](bash/install.md)**.
 
 ---
